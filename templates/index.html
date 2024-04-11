@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+
+<html lang="pl">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width", initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+        <title>Cheap Sky</title> <!-- Ta nazwa jest tylko robocza -->
+    </head>
+
+    <body>
+        <!-- To div, którym są zdjęcia-tło (mozna je zmieniac) -->
+        <div class="background-slider">
+            <img src="/static/bg_one.JPG" class="active">
+            <img src="/static/bg_two.jpeg">
+            <img src="/static/bg_three.jpeg">
+            <img src="/static/bg_four.jpeg">
+            <img src="/static/bg_five.jpeg">
+        </div>
+
+        <div class="container">
+
+            <h1>Cheap Sky</h1> <!-- Zrobić tak, aby to było navbarem -->
+
+            <form action="#">
+
+                <!-- Wybór czy lecimy w jedna czy dwie strony -->
+                <!-- Dane to sa stringi, requestujemy do selecta-->
+                <label for="tripType">Chcę lecieć:</label>
+                <select id="tripType" name="tripType">
+                    <option value="roundTrip">W dwie strony</option>
+                    <option value="oneWay">W jedną stronę</option>
+                </select>
+
+                <!-- Wybieramy lotnisko wylotu-->
+                <!-- Tutaj zwraca to co jest w value=''-->
+                <label for="airport">Lotnisko wylotu:</label>
+                <select id="departure" name="departure">
+                    <option value="BZG">Bydgoszcz (BZG)</option>
+                    <option value="IEG">Zielona Góra (IEG)</option>
+                    <option value="GDN">Gdańsk (GDN)</option>
+                    <option value="KTW">Katowice (KTW)</option>
+                    <option value="KRK">Kraków (KRK)</option>
+                    <option value="LCJ">Łódź (LCJ)</option>
+                    <option value="LUZ">Lublin (LUZ)</option>
+                    <option value="POZ">Poznań (POZ)</option>
+                    <option value="RDO">Radom (RDO)</option>
+                    <option value="RZE">Rzeszów (RZE)</option>
+                    <option value="SZY">Olsztyn/Szymany (SZY)</option>
+                    <option value="SZZ">Szczecin (SZZ)</option>
+                    <option value="WAW">Warszawa Chopin (WAW)</option>
+                    <option value="WMI">Warszawa/Modlin (WMI)</option>
+                    <option value="WRO">Wrocław (WRO)</option>
+                    <option value="ALL">Wszystkie polskie lotniska (ALL)</option>
+                </select>
+
+                <!-- Wybieramy datę wylotu-->
+                <label for="departureDate" name="departureDate">Data wylotu:</label>
+                <input type="date" id="departureDate" name="departureDate">
+
+                <!-- Wybieramy datę powrotu-->
+                <label for="returnDate" id="returnDateLabel">Data powrotu:</label>
+                <input type="date" id="returnDate" name="returnDate">
+
+                <!-- Opcja, czy powrot ma byc do tego samego miejsca-->
+                <label for="returnToDomestLabel" id="returnToDomestLabel">Powrót do tego samego miejsca:</label>
+                <select id="returnToDomest" name="returnToDomest">
+                    <option value="YesToDomest">Tak</option>
+                    <option value="NoToDomest">Nie</option>
+                </select>
+
+                <!-- To jest przycisk z wyszukiwaniem-->
+                <input type="submit" value="Szukaj tanich lotów">
+            </form>
+        </div>
+
+        <div class="dots"></div> <!-- To są te kropeczki -->
+
+        <!-- Skrypt JavaScript -->
+
+        <script>
+            let currentIndex = 0;
+            const images = document.querySelectorAll('.background-slider img');
+            const dotsContainer =document.querySelector('.dots');
+            const dots = [];
+
+            // Usun istniejace kropki
+            dotsContainer.innerHTML = '';
+
+            // Tworzenie kropek w zaleznosci od ilosci zdjec
+            images.forEach((image, index) => {
+                const dot = document.createElement('span');
+                dot.classList.add('dot');
+                dot.addEventListener('click', () => {
+                    changeImage(index);
+                });
+                dotsContainer.appendChild(dot);
+                dots.push(dot);
+            });
+            images[currentIndex].classList.add('active');
+
+            // Zmiana zdjecia
+            function changeImage(index) {
+                images.forEach((image, i) => {
+                    if (i == index) {
+                        image.classList.add('active');
+                        dots[i].classList.add('active');
+                    } else {
+                        image.classList.remove('active');
+                        dots[i].classList.remove('active');
+                    }
+                });
+                currentIndex = index;
+            }
+
+            // Zmiana obrazka co 5 sekund
+            setInterval(() => {
+                currentIndex = (currentIndex + 1) % images.length;
+                changeImage(currentIndex);
+            }, 20000);
+
+            // One way i return --> czyli jak opcja, ze w jedna strone to znika data powrotu
+            const tripTypeSelect = document.getElementById('tripType');
+            const returnDateLabel = document.getElementById('returnDateLabel');
+            const returnDateInput = document.getElementById('returnDate');
+            const returnToDomestLabel = document.getElementById('returnToDomestLabel');
+            const returnToDomest = document.getElementById('returnToDomest');
+
+            function handleTripTypeChange() {
+                if (tripTypeSelect.value === 'oneWay') {
+                    returnDateLabel.style.display = 'none';
+                    returnDateInput.style.display = 'none';
+                    returnToDomestLabel.style.display = 'none';
+                    returnToDomest.style.display = 'none';
+                } else {
+                    returnDateInput.style.display = 'inline';
+                    returnDateLabel.style.display = 'inline';
+                    returnToDomestLabel.style.display = 'inline';
+                    returnToDomest.style.display = 'inline';
+                }
+            }
+
+            tripTypeSelect.addEventListener('change', handleTripTypeChange);
+            handleTripTypeChange();
+
+        </script>
+
+    </body>
+</html>
