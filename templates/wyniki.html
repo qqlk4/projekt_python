@@ -1,0 +1,37 @@
+<!-- To jest strona z wynikami wyszukiwania -->
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style_res.css') }}">
+    <title>Wyniki Wyszukiwania</title>
+</head>
+<body>
+
+    <div class="background-slider">
+        <img src="/static/bg_four.jpeg" class="active">
+        <!-- Moze dodac taka opcje jak na stronie glownej-->
+        <!-- Dodac jakis navbar-->
+    </div>
+
+    <h1>Wyniki Wyszukiwania</h1>
+    <table>
+        <tr>
+            <th>Kod IATA destynacji</th>
+            <th>Cena</th>
+            <th>Waluta</th>
+            <th>Linia lotnicza</th>
+        </tr>
+        {% for lot in dziennik_lotow %}
+        <tr>
+            <td>{{ lot.miasto }}</td>
+            <td>{{ lot.cena }}</td>
+            <td>{{ lot.waluta }}</td>
+            <td>{{ lot.airline }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>
