@@ -23,14 +23,13 @@
 
             <h1>Cheap Sky</h1> <!-- Zrobić tak, aby to było navbarem -->
 
-            <form action="#">
+            <form action='/szukaj_tanich_lotow' method='POST'>
 
                 <!-- Wybór czy lecimy w jedna czy dwie strony -->
-                <!-- Dane to sa stringi, requestujemy do selecta-->
                 <label for="tripType">Chcę lecieć:</label>
                 <select id="tripType" name="tripType">
-                    <option value="roundTrip">W dwie strony</option>
-                    <option value="oneWay">W jedną stronę</option>
+                    <option value="true">W dwie strony</option>
+                    <option value="false">W jedną stronę</option>
                 </select>
 
                 <!-- Wybieramy lotnisko wylotu-->
@@ -38,21 +37,18 @@
                 <label for="airport">Lotnisko wylotu:</label>
                 <select id="departure" name="departure">
                     <option value="BZG">Bydgoszcz (BZG)</option>
-                    <option value="IEG">Zielona Góra (IEG)</option>
                     <option value="GDN">Gdańsk (GDN)</option>
                     <option value="KTW">Katowice (KTW)</option>
                     <option value="KRK">Kraków (KRK)</option>
                     <option value="LCJ">Łódź (LCJ)</option>
                     <option value="LUZ">Lublin (LUZ)</option>
                     <option value="POZ">Poznań (POZ)</option>
-                    <option value="RDO">Radom (RDO)</option>
                     <option value="RZE">Rzeszów (RZE)</option>
                     <option value="SZY">Olsztyn/Szymany (SZY)</option>
                     <option value="SZZ">Szczecin (SZZ)</option>
                     <option value="WAW">Warszawa Chopin (WAW)</option>
-                    <option value="WMI">Warszawa/Modlin (WMI)</option>
+                    <!--<option value="WMI">Warszawa/Modlin (WMI)</option> -> Modlin chwilowo wyłączony, do przekminienia-->
                     <option value="WRO">Wrocław (WRO)</option>
-                    <option value="ALL">Wszystkie polskie lotniska (ALL)</option>
                 </select>
 
                 <!-- Wybieramy datę wylotu-->
@@ -63,7 +59,8 @@
                 <label for="returnDate" id="returnDateLabel">Data powrotu:</label>
                 <input type="date" id="returnDate" name="returnDate">
 
-                <!-- Opcja, czy powrot ma byc do tego samego miejsca-->
+                <!-- Opcja, czy powrot ma byc do tego samego miejsca // Czy to konieczne?-->
+                <!-- Zamiast tego chyba lepiej dac formularz do wpisania maila -->
                 <label for="returnToDomestLabel" id="returnToDomestLabel">Powrót do tego samego miejsca:</label>
                 <select id="returnToDomest" name="returnToDomest">
                     <option value="YesToDomest">Tak</option>
@@ -128,7 +125,7 @@
             const returnToDomest = document.getElementById('returnToDomest');
 
             function handleTripTypeChange() {
-                if (tripTypeSelect.value === 'oneWay') {
+                if (tripTypeSelect.value === 'false') {
                     returnDateLabel.style.display = 'none';
                     returnDateInput.style.display = 'none';
                     returnToDomestLabel.style.display = 'none';
