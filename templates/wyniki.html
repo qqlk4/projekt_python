@@ -18,16 +18,18 @@
     <h1>Wyniki Wyszukiwania</h1>
     <table>
         <tr>
+            <th>Nazwa miasta</th>
             <th>Kod IATA destynacji</th>
             <th>Cena</th>
-            <th>Waluta</th>
+            <th>Numer lotu</th>
             <th>Linia lotnicza</th>
         </tr>
         {% for lot in dziennik_lotow %}
         <tr>
+            <td>{{ lot.nazwa_miasta }}</td>
             <td>{{ lot.miasto }}</td>
             <td>{{ lot.cena }}</td>
-            <td>{{ lot.waluta }}</td>
+            <td>{{ lot.numer_lotu }}</td>
             <td>{{ lot.airline }}</td>
         </tr>
         {% endfor %}

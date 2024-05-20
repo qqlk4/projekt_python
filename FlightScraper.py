@@ -40,13 +40,23 @@ def azair_oneway(iata_code, departure_date):
     flights = []
 
     div_detail_elements = soup.find_all('div', class_='detail')
-
+    
     # Tutaj mechanizm skrobiący
     for div_detail in div_detail_elements:
         span_to = div_detail.find('span', class_='to')
+
         if span_to:
+
+            #wyciąganie samej nazwy miasta bez zbędnych śmieci
+            full_text = span_to.get_text(separator=' ', strip=True)
+            for inner_span in span_to.find_all('span'):
+                inner_text = inner_span.get_text(separator=' ', strip=True)
+                full_text = full_text.replace(inner_text, '')
+            destination_city = ' '.join(full_text.split())
+
             span_code = span_to.find('span', class_='code')
             current_price = div_detail.find('span', class_='legPrice')
+            flight_number = span_to.find('a', title='flightradar24')
 
             ryanair = div_detail.find('span', class_='airline iataFR')
             wizzair = div_detail.find('span', class_='airline iataW6')
@@ -54,16 +64,16 @@ def azair_oneway(iata_code, departure_date):
             easyJet = div_detail.find('span', class_='airline iataU2')
 
             if span_code and current_price and ryanair: # Tutaj cos nad tym warunkiem pokminić
-                flights.append({'miasto': span_code.text, 'cena': current_price.text,'waluta':'zł', 'airline': ryanair.text})
+                flights.append({'nazwa_miasta':destination_city[6:], 'miasto': span_code.text[:3], 'cena': current_price.text,'numer_lotu':flight_number.text, 'airline': ryanair.text})
             
             elif span_code and current_price and wizzair:
-                flights.append({'miasto': span_code.text, 'cena': current_price.text,'waluta':'zł', 'airline': wizzair.text})
+                flights.append({'nazwa_miasta':destination_city[6:],'miasto': span_code.text[:3], 'cena': current_price.text,'numer_lotu':flight_number.text, 'airline': wizzair.text})
 
             elif span_code and current_price and norwegian:
-                flights.append({'miasto': span_code.text, 'cena': current_price.text,'waluta':'zł', 'airline': norwegian.text})
+                flights.append({'nazwa_miasta':destination_city[6:],'miasto': span_code.text[:3], 'cena': current_price.text,'numer_lotu':flight_number.text, 'airline': norwegian.text})
             
             elif span_code and current_price and easyJet:
-                flights.append({'miasto': span_code.text, 'cena': current_price.text,'waluta':'zł', 'airline': easyJet.text})
+                flights.append({'nazwa_miasta':destination_city[6:],'miasto': span_code.text[:3], 'cena': current_price.text,'numer_lotu':flight_number.text, 'airline': easyJet.text})
 
     return flights
 
@@ -113,9 +123,22 @@ def azair_return(iata_code, departure_date, arrival_date):
     soup = BeautifulSoup(request.content, 'html.parser')
 
     div_detail_elements = soup.find_all('div', class_='detail')
-
     prices_to_dest = []
 
+    div_text_elements = soup.find_all('div', class_='text')
+
+    cities = []
+
+    for div_text in div_text_elements:
+        span_t = div_text.find('span', class_='to' )
+        full_text = span_t.text
+        for inner_span in span_t.find_all('span'):
+            inner_text = inner_span.get_text(separator=' ', strip=True)
+            full_text = full_text.replace(inner_text, '')
+        destination_city = ' '.join(full_text.split())
+        cities.append(destination_city[6:])
+    
+    id = 0
     for div_detail in div_detail_elements:
 
         prices_to_origin = []
@@ -124,7 +147,6 @@ def azair_return(iata_code, departure_date, arrival_date):
         if span_to:
             span_code = span_to.find('span', class_='code')
             current_price = div_detail.find('span', class_='legPrice')
-
             # Co w przypadku, kiedy jest lot jedna linia i powrot inna? Jak sie zachowuje program?
             ryanair = div_detail.find('span', class_='airline iataFR') 
             wizzair = div_detail.find('span', class_='airline iataW6')
@@ -142,7 +164,7 @@ def azair_return(iata_code, departure_date, arrival_date):
                 # Ta czesc kodu odpowiada za sumowanie ceny, by wyswietlac calkowita cene za lot w dwie strony
                 if actual_iata != iata_code:
                     prices_to_dest.append(actual_price)
-                    dest_iata = span_code.text
+                    dest_iata = span_code.text[:3]
 
                 elif actual_iata == iata_code:
                     prices_to_origin.append(actual_price)
@@ -150,8 +172,8 @@ def azair_return(iata_code, departure_date, arrival_date):
                     total_price = prices_to_dest[0] + prices_to_origin[0]
                     prices_to_dest.clear()
 
-                    flights.append({'miasto': dest_iata, 'cena': total_price,'waluta':'zł', 'airline': ryanair.text})
-
+                    flights.append({'nazwa_miasta': cities[id], 'miasto': dest_iata, 'cena': str(total_price)+" zł",'numer_lotu': "", 'airline': ryanair.text})
+                    id += 1
             elif span_code and current_price and wizzair:
 
                 actual_price = current_price.text
@@ -163,15 +185,15 @@ def azair_return(iata_code, departure_date, arrival_date):
                 # Ta czesc kodu odpowiada za sumowanie ceny, by wyswietlac calkowita cene za lot w dwie strony
                 if actual_iata != iata_code:
                     prices_to_dest.append(actual_price)
-                    dest_iata = span_code.text
+                    dest_iata = span_code.text[:3]
 
                 elif actual_iata == iata_code:
                     prices_to_origin.append(actual_price)
 
                     total_price = prices_to_dest[0] + prices_to_origin[0]
                     prices_to_dest.clear()
-
-                    flights.append({'miasto': dest_iata, 'cena': total_price,'waluta':'zł', 'airline': wizzair.text})
+                    flights.append({'nazwa_miasta': cities[id], 'miasto': dest_iata, 'cena': str(total_price)+" zł",'numer_lotu': "", 'airline': wizzair.text})
+                    id += 1
 
             elif span_code and current_price and norwegian:
 
@@ -184,15 +206,15 @@ def azair_return(iata_code, departure_date, arrival_date):
                 # Ta czesc kodu odpowiada za sumowanie ceny, by wyswietlac calkowita cene za lot w dwie strony
                 if actual_iata != iata_code:
                     prices_to_dest.append(actual_price)
-                    dest_iata = span_code.text
+                    dest_iata = span_code.text[:3]
 
                 elif actual_iata == iata_code:
                     prices_to_origin.append(actual_price)
 
                     total_price = prices_to_dest[0] + prices_to_origin[0]
                     prices_to_dest.clear()
-
-                    flights.append({'miasto': dest_iata, 'cena': total_price,'waluta':'zł', 'airline': norwegian.text})
+                    flights.append({'nazwa_miasta': cities[id], 'miasto': dest_iata, 'cena': str(total_price)+" zł",'numer_lotu': "", 'airline': norwegian.text})
+                    id += 1
 
             elif span_code and current_price and easyJet:
 
@@ -200,19 +222,19 @@ def azair_return(iata_code, departure_date, arrival_date):
                 actual_price = actual_price.replace(' zł','')
                 actual_price = int(actual_price)
 
-                actual_iata = span_code.text
+                actual_iata = span_code.text[:3]
 
                 # Ta czesc kodu odpowiada za sumowanie ceny, by wyswietlac calkowita cene za lot w dwie strony
                 if actual_iata != iata_code:
                     prices_to_dest.append(actual_price)
-                    dest_iata = span_code.text
+                    dest_iata = span_code.text[:3]
 
                 elif actual_iata == iata_code:
                     prices_to_origin.append(actual_price)
 
                     total_price = prices_to_dest[0] + prices_to_origin[0]
                     prices_to_dest.clear()
-
-                    flights.append({'miasto': dest_iata, 'cena': total_price,'waluta':'zł', 'airline': easyJet.text})
+                    flights.append({'nazwa_miasta': cities[id], 'miasto': dest_iata, 'cena': str(total_price)+" zł",'numer_lotu': "", 'airline': easyJet.text})
+                    id += 1
 
     return flights
