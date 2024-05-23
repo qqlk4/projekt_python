@@ -20,9 +20,11 @@ def szukaj_lotow():
 
         if trip_type == 'false':
             flights = FS.azair_oneway(dep_airport, date_in)
+            return render_template('wyniki_oneway.html', dziennik_lotow=flights)
         elif trip_type == 'true':
             flights = FS.azair_return(dep_airport, date_in, date_out)
-    return render_template('wyniki.html', dziennik_lotow=flights)
+            return render_template('wyniki_return.html', dziennik_lotow=flights)
+#    return render_template('wyniki.html', dziennik_lotow=flights)
 
 
 if __name__ == '__main__':

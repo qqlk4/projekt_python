@@ -37,11 +37,18 @@ def azair_oneway(iata_code, departure_date):
     request = r.get(url_oneway)
     soup = BeautifulSoup(request.content, 'html.parser')
     
+    time = []
+
+    span_time_elements = soup.find_all('span', class_= 'durcha')
+    for span_time in span_time_elements:
+        time.append(span_time.text[:6])
+
     flights = []
 
     div_detail_elements = soup.find_all('div', class_='detail')
     
     # Tutaj mechanizm skrobiący
+    id = 0
     for div_detail in div_detail_elements:
         span_to = div_detail.find('span', class_='to')
 
@@ -64,17 +71,17 @@ def azair_oneway(iata_code, departure_date):
             easyJet = div_detail.find('span', class_='airline iataU2')
 
             if span_code and current_price and ryanair: # Tutaj cos nad tym warunkiem pokminić
-                flights.append({'nazwa_miasta':destination_city[6:], 'miasto': span_code.text[:3], 'cena': current_price.text,'numer_lotu':flight_number.text, 'airline': ryanair.text})
-            
+                flights.append({'nazwa_miasta':destination_city[6:], 'miasto': span_code.text[:3], 'cena': current_price.text, 'czas':time[id] ,'numer_lotu':flight_number.text, 'airline': ryanair.text})
+                id +=1
             elif span_code and current_price and wizzair:
-                flights.append({'nazwa_miasta':destination_city[6:],'miasto': span_code.text[:3], 'cena': current_price.text,'numer_lotu':flight_number.text, 'airline': wizzair.text})
-
+                flights.append({'nazwa_miasta':destination_city[6:],'miasto': span_code.text[:3], 'cena': current_price.text,'czas':time[id], 'numer_lotu':flight_number.text, 'airline': wizzair.text})
+                id +=1
             elif span_code and current_price and norwegian:
-                flights.append({'nazwa_miasta':destination_city[6:],'miasto': span_code.text[:3], 'cena': current_price.text,'numer_lotu':flight_number.text, 'airline': norwegian.text})
-            
+                flights.append({'nazwa_miasta':destination_city[6:],'miasto': span_code.text[:3], 'cena': current_price.text,'czas':time[id], 'numer_lotu':flight_number.text, 'airline': norwegian.text})
+                id +=1
             elif span_code and current_price and easyJet:
-                flights.append({'nazwa_miasta':destination_city[6:],'miasto': span_code.text[:3], 'cena': current_price.text,'numer_lotu':flight_number.text, 'airline': easyJet.text})
-
+                flights.append({'nazwa_miasta':destination_city[6:],'miasto': span_code.text[:3], 'cena': current_price.text,'czas':time[id], 'numer_lotu':flight_number.text, 'airline': easyJet.text})
+                id +=1
     return flights
 
 
