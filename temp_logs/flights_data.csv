@@ -1,0 +1,60 @@
+data,nazwa_miasta,miasto,cena,czas,numer_lotu,airline
+2024-06-01,Venice,TSF,59 zł,1:40 h,FR7508,Ryanair
+2024-06-01,Paphos,PFO,172 zł,3:25 h,FR637,Ryanair
+2024-06-01,Milan,BGY,209 zł,1:50 h,FR3594,Ryanair
+2024-06-01,Copenhagen,CPH,253 zł,1:10 h,FR8522,Ryanair
+2024-06-01,Zadar,ZAD,259 zł,1:40 h,FR7246,Ryanair
+2024-06-01,Malta,MLA,278 zł,2:50 h,FR5226,Ryanair
+2024-06-01,Kutaisi,KUT,449 zł,3:35 h,W67942,Wizz Air
+2024-06-01,Barcelona,GRO,523 zł,2:40 h,FR5123,Ryanair
+2024-06-01,Palma Mall,PMI,537 zł,2:55 h,FR955,Ryanair
+2024-06-01,Pula,PUY,538 zł,1:40 h,FR3584,Ryanair
+2024-06-01,Cagliari,CAG,545 zł,2:35 h,FR7220,Ryanair
+2024-06-01,Dublin,DUB,589 zł,2:40 h,FR1975,Ryanair
+2024-06-01,Bristol,BRS,628 zł,2:20 h,FR7948,Ryanair
+2024-06-01,Alicante,ALC,655 zł,3:15 h,FR2544,Ryanair
+2024-06-01,Corfu,CFU,860 zł,2:25 h,FR8072,Ryanair
+2024-06-01,London,STN,958 zł,2:05 h,FR1751,Ryanair
+2024-06-01,Rome,CIA,1902 zł,2:05 h,FR7171,Ryanair
+2024-06-02,Cork,ORK,80 zł,2:50 h,FR7244,Ryanair
+2024-06-02,Stockholm,ARN,98 zł,1:34 h,FR7679,Ryanair
+2024-06-02,Paris,BVA,114 zł,2:00 h,FR6683,Ryanair
+2024-06-02,Thessaloni,SKG,117 zł,2:25 h,FR2552,Ryanair
+2024-06-02,Zadar,ZAD,279 zł,1:40 h,FR7246,Ryanair
+2024-06-02,Rome,CIA,306 zł,2:05 h,FR7171,Ryanair
+2024-06-02,Manchester,MAN,449 zł,2:20 h,FR7547,Ryanair
+2024-06-02,Brussels,CRL,478 zł,1:45 h,FR5000,Ryanair
+2024-06-02,Liverpool,LPL,488 zł,2:20 h,FR9629,Ryanair
+2024-06-02,Leeds,LBA,488 zł,2:10 h,FR5607,Ryanair
+2024-06-02,Dublin,DUB,492 zł,2:40 h,FR1975,Ryanair
+2024-06-02,Edinburgh,EDI,496 zł,2:25 h,FR6619,Ryanair
+2024-06-02,Oslo,TRF,865 zł,1:40 h,FR1764,Ryanair
+2024-06-02,London,STN,905 zł,2:05 h,FR2337,Ryanair
+2024-06-02,Birmingham,BHX,1635 zł,2:25 h,FR5073,Ryanair
+2024-06-03,Dubrovnik,DBV,89 zł,2:05 h,FR5923,Ryanair
+2024-06-03,Malta,MLA,121 zł,2:50 h,FR5226,Ryanair
+2024-06-03,Milan,BGY,138 zł,1:50 h,FR3594,Ryanair
+2024-06-03,Prague,PRG,144 zł,1:00 h,FR8520,Ryanair
+2024-06-03,Bari,BRI,146 zł,2:10 h,FR1217,Ryanair
+2024-06-03,Zadar,ZAD,158 zł,1:40 h,FR7246,Ryanair
+2024-06-03,Oslo,TRF,169 zł,1:40 h,FR1764,Ryanair
+2024-06-03,Billund,BLL,210 zł,1:20 h,FR2808,Ryanair
+2024-06-03,Bourgas,BOJ,402 zł,2:15 h,FR6328,Ryanair
+2024-06-03,Palma Mall,PMI,443 zł,2:55 h,FR955,Ryanair
+2024-06-03,Corfu,CFU,455 zł,2:25 h,FR8072,Ryanair
+2024-06-03,Lisbon,LIS,529 zł,3:55 h,FR9575,Ryanair
+2024-06-03,Chania,CHQ,544 zł,2:55 h,FR624,Ryanair
+2024-06-03,London,LTN,608 zł,2:15 h,W65390,Wizz Air
+2024-06-03,London,STN,688 zł,2:05 h,FR1751,Ryanair
+2024-06-04,Venice,TSF,59 zł,1:40 h,FR7508,Ryanair
+2024-06-04,Copenhagen,CPH,70 zł,1:10 h,FR8522,Ryanair
+2024-06-04,Milan,BGY,153 zł,1:50 h,FR3594,Ryanair
+2024-06-04,Zadar,ZAD,153 zł,1:40 h,FR7246,Ryanair
+2024-06-04,Rome,CIA,283 zł,2:05 h,FR7171,Ryanair
+2024-06-04,Kutaisi,KUT,298 zł,3:35 h,W67942,Wizz Air
+2024-06-04,Cagliari,CAG,322 zł,2:35 h,FR7220,Ryanair
+2024-06-04,London,LTN,408 zł,2:15 h,W65390,Wizz Air
+2024-06-04,London,STN,428 zł,2:05 h,FR2337,Ryanair
+2024-06-04,Bristol,BRS,546 zł,2:20 h,FR7948,Ryanair
+2024-06-04,Alicante,ALC,679 zł,3:15 h,FR2544,Ryanair
+2024-06-04,Dublin,DUB,708 zł,2:40 h,FR1975,Ryanair
