@@ -2,6 +2,9 @@
 
 from bs4 import BeautifulSoup
 import requests as r
+from datetime import datetime, timedelta
+import pandas as pd
+
 
 # Dziennik z polskimi lotniskami
 POLISH_AIRPORTS = {'POZ': 'Poznan',
@@ -18,11 +21,12 @@ POLISH_AIRPORTS = {'POZ': 'Poznan',
 'WRO': 'Wroclaw',
 }
 
-def azair_oneway(iata_code, departure_date):
+def azair_oneway(iata_code, departure_date, days_ahead=0):
     """ To funkcja, która wykorzystuje azair do wyszukiwania lotów w jedna strone.
     Jako argumenty przyjmuje kod IATA lotniska w Polsce oraz datę wylotu.
     """
-
+    departure_date = (datetime.strptime(departure_date, '%Y-%m-%d') + timedelta(days=days_ahead)).strftime('%Y-%m-%d')
+    
     # Tutaj niezbędne operacje na stringach, tak by dopasować je do linku
     year = departure_date[0:4]
     if departure_date[5:6] == '0':
@@ -37,11 +41,18 @@ def azair_oneway(iata_code, departure_date):
     request = r.get(url_oneway)
     soup = BeautifulSoup(request.content, 'html.parser')
     
+    time = []
+
+    span_time_elements = soup.find_all('span', class_= 'durcha')
+    for span_time in span_time_elements:
+        time.append(span_time.text[:6])
+
     flights = []
 
     div_detail_elements = soup.find_all('div', class_='detail')
     
     # Tutaj mechanizm skrobiący
+    id = 0
     for div_detail in div_detail_elements:
         span_to = div_detail.find('span', class_='to')
 
@@ -64,19 +75,30 @@ def azair_oneway(iata_code, departure_date):
             easyJet = div_detail.find('span', class_='airline iataU2')
 
             if span_code and current_price and ryanair: # Tutaj cos nad tym warunkiem pokminić
-                flights.append({'nazwa_miasta':destination_city[6:], 'miasto': span_code.text[:3], 'cena': current_price.text,'numer_lotu':flight_number.text, 'airline': ryanair.text})
-            
+                flights.append({'data':departure_date,'nazwa_miasta':destination_city[6:], 'miasto': span_code.text[:3], 'cena': current_price.text, 'czas':time[id] ,'numer_lotu':flight_number.text, 'airline': ryanair.text})
+                id +=1
             elif span_code and current_price and wizzair:
-                flights.append({'nazwa_miasta':destination_city[6:],'miasto': span_code.text[:3], 'cena': current_price.text,'numer_lotu':flight_number.text, 'airline': wizzair.text})
-
+                flights.append({'data':departure_date,'nazwa_miasta':destination_city[6:],'miasto': span_code.text[:3], 'cena': current_price.text,'czas':time[id], 'numer_lotu':flight_number.text, 'airline': wizzair.text})
+                id +=1
             elif span_code and current_price and norwegian:
-                flights.append({'nazwa_miasta':destination_city[6:],'miasto': span_code.text[:3], 'cena': current_price.text,'numer_lotu':flight_number.text, 'airline': norwegian.text})
-            
+                flights.append({'data':departure_date,'nazwa_miasta':destination_city[6:],'miasto': span_code.text[:3], 'cena': current_price.text,'czas':time[id], 'numer_lotu':flight_number.text, 'airline': norwegian.text})
+                id +=1
             elif span_code and current_price and easyJet:
-                flights.append({'nazwa_miasta':destination_city[6:],'miasto': span_code.text[:3], 'cena': current_price.text,'numer_lotu':flight_number.text, 'airline': easyJet.text})
-
+                flights.append({'data':departure_date,'nazwa_miasta':destination_city[6:],'miasto': span_code.text[:3], 'cena': current_price.text,'czas':time[id], 'numer_lotu':flight_number.text, 'airline': easyJet.text})
+                id +=1
+    
     return flights
 
+def azair_oneway_multiple_days(iata_code, departure_date, num_days=3):
+    """To funkcja, która zwraca loty na podaną datę oraz na kolejne dni do przodu.
+    """
+    all_flights = []
+    for day in range(num_days + 1):
+        flights = azair_oneway(iata_code, departure_date, days_ahead=day)
+        all_flights.extend(flights)
+    
+    
+    return all_flights
 
 def azair_return(iata_code, departure_date, arrival_date):
     """ To funkcja, która wykorzystuje azair do wyszukiwania lotów w dwie strony."""

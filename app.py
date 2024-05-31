@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request
 import FlightScraper as FS
+import pandas as pd
+import os
 
 # Zrobić coś jak strona sie wypierdala! --> Tzn jakieś ładne "Ops, we're sorry"
 # Zrobić coś, jak strona się ładuje, zeby to ladnie wyglądało
@@ -20,9 +22,15 @@ def szukaj_lotow():
 
         if trip_type == 'false':
             flights = FS.azair_oneway(dep_airport, date_in)
+            all_flights = FS.azair_oneway_multiple_days(dep_airport, date_in, 3)
+            df = pd.DataFrame(all_flights)
+            df.to_csv('temp_logs/flights_data.csv', index=False)
+
+            return render_template('wyniki_oneway.html', dziennik_lotow=flights)
         elif trip_type == 'true':
             flights = FS.azair_return(dep_airport, date_in, date_out)
-    return render_template('wyniki.html', dziennik_lotow=flights)
+            return render_template('wyniki_return.html', dziennik_lotow=flights)
+#    return render_template('wyniki.html', dziennik_lotow=flights)
 
 
 if __name__ == '__main__':
