@@ -74,7 +74,7 @@ def azair_oneway(iata_code, departure_date, days_ahead=0):
             norwegian = div_detail.find('span', class_='airline iataDY')
             easyJet = div_detail.find('span', class_='airline iataU2')
 
-            if span_code and current_price and ryanair: # Tutaj cos nad tym warunkiem pokminić
+            if span_code and current_price and ryanair:
                 flights.append({'data':departure_date,'nazwa_miasta':destination_city[6:], 'miasto': span_code.text[:3], 'cena': current_price.text, 'czas':time[id] ,'numer_lotu':flight_number.text, 'airline': ryanair.text})
                 id +=1
             elif span_code and current_price and wizzair:
