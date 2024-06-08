@@ -6,9 +6,9 @@ import smtplib
 import mimetypes
 import os
 
-def content_builder(start_date,end_date,max_price_time_value,min_price_time_value,max_price_time_city, min_price_time_city, most_pop_city,av_price, most_pop_airline):
+def content_builder(start_date,end_date,max_price_time_value,min_price_time_value,max_price_time_city, min_price_time_city, most_pop_city,av_price, most_pop_airline, city):
     body = f"""
-    Cześć, widzę, że wyszukiwałeś loty w dniu {start_date}. Jeżeli możesz pozwolić sobie na elastyczność, poniżej przedstawiamy szczegółowy raport na temat lotów w tym i trzech kolejnych dniach!
+    Cześć, widzę, że wyszukiwałeś loty z miasta: {city} w dniu {start_date}. Jeżeli możesz pozwolić sobie na elastyczność, poniżej przedstawiamy szczegółowy raport na temat lotów w tym i trzech kolejnych dniach!
 
     \nNajpopularniejszym kierunkiem w dniach od {start_date} do {end_date} jest: {most_pop_city},
     Najmniej kosztuje minuta lotu do: {min_price_time_city} i wynosi ona: {min_price_time_value} zł,

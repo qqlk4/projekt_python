@@ -1,16 +1,28 @@
 # Tutaj plik z programem, który analizuje dane
 
-# To co mozna zrobić:
-# --> Gdzie mozna poleciec w danym przedziale cenowym
-# --> Mapa z połączeniami 
-
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MultipleLocator
 import MailSender as MS
 from datetime import datetime, timedelta
+import MapMaker as mp
 
-def analyzer(start_date, receiver):
+def analyzer(start_date, receiver, city):
     """ Funkcja, która analizuje dane oraz korzysta z MailSendera do wysłania raportu do usera """
+
+    POLISH_AIRPORTS = {'POZ': 'Poznań',
+    'GDN': 'Gdańsk',
+    'BZG': 'Bydgoszcz',
+    'KTW': 'Katowice',
+    'KRK': 'Kraków',
+    'LCJ': 'Łódź',
+    'LUZ': 'Lublin',
+    'RZE': 'Rzeszów',
+    'SZY': 'Olsztyn-Mazury',
+    'SZZ': 'Szczecin',
+    'WAW': 'Warszawa (Chopin)',
+    'WRO': 'Wrocław',
+    }
     
     # Wczytywanie danych
     data_path = 'temp_logs/flights_data.csv'
@@ -71,40 +83,89 @@ def analyzer(start_date, receiver):
     third_day = newdf[newdf['data'] == dates[2]]
     fourth_day = newdf[newdf['data'] == dates[3]]
 
-    # <-- Pobawić się nad stylami wykresow
+    # Wykres z liczbą lotów w danym dniu:
+
+    title_font_dict = {
+        'weight': 'bold',
+        'size': 12,
+    }
+    labels_font_dict = {
+    'weight': 'bold'
+    }
+
     x_how_many_flights = [dates[0], dates[1], dates[2], dates[3]]
     y_how_many_flights = [len(first_day), len(second_day), len(third_day), len(fourth_day)]
-    plt.bar(x_how_many_flights, y_how_many_flights)
-    plt.xlabel('Data')
-    plt.ylabel('Ilość lotów danego dnia')
-    plt.title(f'Ilość lotów w dniach od {dates[0]} do {dates[3]}')
+    plt.figure(figsize=(10, 6))
+    bars = plt.bar(x_how_many_flights, y_how_many_flights, color='lightblue', edgecolor='black', width=0.5)
+    for bar in bars:
+        yval = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width()/2, yval + 0.5, int(yval), ha='center', va='bottom', fontsize=10, fontweight='bold')
+    plt.xlabel('Data', fontdict=labels_font_dict)
+    plt.ylabel('Liczba lotów danego dnia', fontdict=labels_font_dict)
+    plt.title(f'Liczba lotów w dniach od {dates[0]} do {dates[3]}', fontdict=title_font_dict)
+    plt.grid(axis='y', linestyle='-.', alpha=0.5, linewidth=0.4)
+    plt.yticks(range(0, max(y_how_many_flights) + 2, 2))
+    plt.margins(x=0.1, y=0.1)
+    plt.tight_layout()
     plt.savefig('attachments/figure_one.jpg')
 
-    # <-- Pobawić się nad stylami wykresow
+    # Wykres z kosztem minuty lotu
 
-    plt.rcParams["figure.figsize"] = (16,8)
-    figure, axis = plt.subplots(4)
+    plt.rcParams["figure.figsize"] = (16, 8)
+    figure, axis = plt.subplots(4, 1, sharex=False)
+    days = [first_day, second_day, third_day, fourth_day]
+    titles = [dates[0], dates[1], dates[2], dates[3]]
+    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728']
 
-    X = first_day['miasto']
-    Y = first_day['price_time_ratio']
-    axis[0].bar(X,Y)
+    for i, ax in enumerate(axis):
+        X = days[i]['miasto']
+        Y = days[i]['price_time_ratio']
+        bars = ax.bar(X, Y, color=colors[i], edgecolor='black')
 
-    X = second_day['miasto']
-    Y = second_day['price_time_ratio']
-    axis[1].bar(X,Y)
+        for bar in bars:
+            yval = bar.get_height()
+            ax.text(bar.get_x() + bar.get_width()/2, yval + 0.5, f'{yval:.2f}', ha='center', va='bottom', fontsize=10, fontweight='bold')
 
-    X = third_day['miasto']
-    Y = third_day['price_time_ratio']
-    axis[2].bar(X,Y)
+        ax.set_title(titles[i], fontsize=14, fontweight='bold', loc='left')
+        ax.grid(axis='y', linestyle='--', alpha=0.7, linewidth=0.5)
+        ax.yaxis.set_major_locator(MultipleLocator(2))
 
-    X = fourth_day['miasto']
-    Y = fourth_day['price_time_ratio']
-    axis[3].bar(X,Y)
+    axis[-1].set_xlabel('Destynacja', fontsize=12, fontweight='bold')
+    figure.text(0.04, 0.5, 'Koszt minuty lotu [zł]', va='center', rotation='vertical', fontsize=12, fontweight='bold')
+
+    plt.tight_layout(rect=[0.04, 0.04, 1, 0.96])
+    plt.suptitle(f'Koszt minuty loty w dniach od {dates[0]} do {dates[3]}', fontsize=16, fontweight='bold')
     plt.savefig('attachments/figure_two.jpg')
 
+# <-- Wybieranie 5 najtanszych kierunkow
+
+    newdf['cena'] = newdf['cena'].astype(int)
+    sorted_df = newdf.sort_values(by='cena')
+    lowest_prices = sorted_df.iloc[:5]
+
+    x_city = lowest_prices['nazwa_miasta']
+    y_price = lowest_prices['cena']
+    plt.figure(figsize=(10, 6))
+    bars = plt.bar(x_city, y_price, color='lightblue', edgecolor='black', width=0.5)
+    for bar in bars:
+        yval = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width()/2, yval + 0.5, int(yval), ha='center', va='bottom', fontsize=10, fontweight='bold')
+
+    plt.xlabel('Destynacja', fontdict=labels_font_dict)
+    plt.ylabel('Cena lotu w złotówkach', fontdict=labels_font_dict)
+    plt.title(f'TOP 5 najtańszch kierunków w dniach od {dates[0]} do {dates[3]}', fontdict=title_font_dict)
+    plt.grid(axis='y', linestyle='-.', alpha=0.5, linewidth=0.4)
+    plt.margins(x=0.1, y=0.1)
+    plt.tight_layout()
+    plt.savefig('attachments/figure_three.jpg')
+
+    # Generowanie mapy kierunków w danym dniu
+    mp.map_maker(start_date)
+
     # Tworzenie raportu i wysyłanie maila
-    attachment_paths = ['attachments/figure_one.jpg', 'attachments/figure_two.jpg']
+    attachment_paths = ['attachments/figure_one.jpg', 'attachments/figure_two.jpg','attachments/figure_three.jpg','attachments/mapa_lotnisk.jpg']
+    departure_city = POLISH_AIRPORTS[city]
     
-    body = MS.content_builder(start_date, end_date, max_price_time_value, min_price_time_value, max_price_time_city, min_price_time_city, most_pop_city, av_price, most_pop_airline)
+    body = MS.content_builder(start_date, end_date, max_price_time_value, min_price_time_value, max_price_time_city, min_price_time_city, most_pop_city, av_price, most_pop_airline, departure_city)
 
     MS.mail_creator(receiver, body, attachment_paths)

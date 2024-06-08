@@ -37,5 +37,5 @@ def map_maker(date_in_mm):
     plt.title(f'Możliwe kierunki w dniu {date_in_mm}')
 
     #zapisuje mape do jpg
-    plt.savefig('static/mapa_lotnisk.jpg', format='jpg', dpi=300)
+    plt.savefig('attachments/mapa_lotnisk.jpg', format='jpg', dpi=300)
 
