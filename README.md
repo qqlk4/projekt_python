@@ -1,4 +1,4 @@
-Projekt na analizę danych (opis projektu)
+Projekt na analizę danych
 
 Jak skorzystać z wyszukiwarki (step-by-step):
 
