@@ -64,7 +64,10 @@
                 <input type="email" id="mail_sender" name="mail_sender">
 
                 <!-- To jest przycisk z wyszukiwaniem-->
-                <input type="submit" value="Szukaj tanich lotów">
+                <input type="submit" value="Szukaj tanich lotów" id="submitButton">
+                <div id="loadingSpinner" style="display: none;">
+                    <img src="/static/spinner.gif" alt="Ładowanie..." />
+                </div>
             </form>
         </div>
 
@@ -73,6 +76,16 @@
         <!-- Skrypt JavaScript -->
 
         <script>
+            
+            document.querySelector('form').addEventListener('submit', function(event) {
+            var submitButton = document.getElementById('submitButton');
+            var loadingSpinner = document.getElementById('loadingSpinner');
+
+            submitButton.disabled = true;
+            submitButton.value = 'Wyszukiwanie...';
+            loadingSpinner.style.display = 'block';
+        });
+
             let currentIndex = 0;
             const images = document.querySelectorAll('.background-slider img');
             const dotsContainer =document.querySelector('.dots');

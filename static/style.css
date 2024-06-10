@@ -46,8 +46,19 @@ select, input[type="date"] {
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
+    cursor: pointer;
+}
+
+select, input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
     cursor: pointer; /* Czy zostawic te cursory */
 }
+
 input[type="submit"] {
     width: 100%;
     padding: 10px;
@@ -63,6 +74,21 @@ input[type="submit"]:hover {
     background-color: #0056b3;
     cursor: pointer;
 }
+
+#loadingSpinner {
+    position: fixed; 
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    z-index: 1000;
+}
+
+#loadingSpinner img {
+    width: 50px; /* Adjust size as needed */
+    height: 50px; /* Adjust size as needed */
+}
+
 .dots {
     text-align: center;
     margin-top: 20px;

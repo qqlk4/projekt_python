@@ -137,7 +137,7 @@ def analyzer(start_date, receiver, city):
     plt.suptitle(f'Koszt minuty loty w dniach od {dates[0]} do {dates[3]}', fontsize=16, fontweight='bold')
     plt.savefig('attachments/figure_two.jpg')
 
-# <-- Wybieranie 5 najtanszych kierunkow
+    # <-- Wybieranie 5 najtanszych kierunkow
 
     newdf['cena'] = newdf['cena'].astype(int)
     sorted_df = newdf.sort_values(by='cena')
